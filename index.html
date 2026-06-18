@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SwimTopia Tricks</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #182433;
+        background: #f4f7fb;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 32px 20px;
+      }
+
+      main {
+        width: min(860px, 100%);
+        margin: 0 auto;
+      }
+
+      .site-header {
+        margin-bottom: 32px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: #516173;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: clamp(2.5rem, 8vw, 4.75rem);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .intro {
+        max-width: 66ch;
+        margin: 0;
+        color: #405064;
+        font-size: 1.125rem;
+        line-height: 1.65;
+      }
+
+      .tip .intro + .intro,
+      .tip .note + .intro {
+        margin-top: 14px;
+      }
+
+      .tips {
+        display: grid;
+        gap: 28px;
+      }
+
+      .tip {
+        border-top: 1px solid #cfd8e3;
+        padding-top: 28px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: clamp(1.5rem, 4vw, 2.15rem);
+        line-height: 1.12;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 28px 0 14px;
+        font-size: 1.2rem;
+        letter-spacing: 0;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 1.5rem;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 1.35rem;
+      }
+
+      li {
+        margin: 0 0 14px;
+        color: #2d3d50;
+        line-height: 1.6;
+      }
+
+      a {
+        color: #1f6a8a;
+        font-weight: 700;
+        text-decoration-thickness: 0.08em;
+        text-underline-offset: 0.16em;
+      }
+
+      a:focus-visible {
+        outline: 3px solid #7cc7d8;
+        outline-offset: 2px;
+      }
+
+      .code-block {
+        margin: 18px 0;
+        border: 1px solid #cfd8e3;
+        background: #111927;
+      }
+
+      .code-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid #2b3545;
+        color: #d8e2ee;
+        font-size: 0.875rem;
+      }
+
+      button {
+        min-height: 36px;
+        border: 1px solid #718096;
+        border-radius: 6px;
+        padding: 0 12px;
+        color: #111927;
+        background: #f7fafc;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:focus-visible {
+        outline: 3px solid #7cc7d8;
+        outline-offset: 2px;
+      }
+
+      pre {
+        margin: 0;
+        overflow-x: auto;
+        padding: 18px;
+        color: #eef6ff;
+        font-size: 0.95rem;
+        line-height: 1.55;
+      }
+
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      .note {
+        margin: 20px 0 0;
+        padding: 16px 18px;
+        border-left: 4px solid #cf7a2c;
+        background: #fff9f2;
+        color: #59412b;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 620px) {
+        body {
+          padding: 24px 16px;
+        }
+
+        .code-toolbar {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="site-header">
+        <p class="eyebrow">SwimTopia Tricks</p>
+        <h1>SwimTopia Tricks</h1>
+        <p class="intro">
+          Small browser tricks for making SwimTopia reports easier to use, print, and share.
+        </p>
+      </header>
+
+      <section class="tips" aria-label="SwimTopia tips">
+        <article class="tip" aria-labelledby="remove-times-heading">
+          <h2 id="remove-times-heading">Remove times from Entries By Event</h2>
+          <p class="intro">
+            Use this console snippet to hide the Time, Date, and Meet columns from the SwimTopia
+            Entries By Event report before printing or saving it as a PDF.
+          </p>
+
+          <p class="note">
+            Only paste console code when you trust the source. Pasted code on other sites can be
+            used to steal account access, but this snippet only edits the report table that is
+            already on the page.
+          </p>
+
+          <h3>Steps</h3>
+          <ol>
+            <li>Generate the Entries By Event report in SwimTopia.</li>
+            <li>Open the Chrome console: Control+Shift+J on Windows, or Cmd+Option+J on Mac.</li>
+            <li>Paste this code after the console prompt, then press Return.</li>
+          </ol>
+
+          <div class="code-block">
+            <div class="code-toolbar">
+              <span>Console snippet</span>
+              <button type="button" id="copy-code">Copy</button>
+            </div>
+            <pre><code id="snippet">document.querySelectorAll("table.stylized tr").forEach(row =&gt; {
+  [6, 5, 4, 3].forEach(i =&gt; row.children[i]?.remove());
+  const spacer = row.insertCell?.(-1) || document.createElement("th");
+  spacer.innerHTML = "&amp;nbsp;";
+  spacer.style.width = "60%";
+  spacer.style.border = "0";
+  spacer.style.background = "transparent";
+  if (!spacer.parentNode) row.appendChild(spacer);
+});</code></pre>
+          </div>
+
+          <ol start="4">
+            <li>If Chrome warns you before allowing pasted console code, follow its prompt, then paste again.</li>
+            <li>The Time columns plus the Date and Meet columns should disappear.</li>
+            <li>Click Print and save the report as a PDF.</li>
+          </ol>
+
+          <p class="note">
+            If anything goes wrong, reload the report page and it will return to normal.
+          </p>
+        </article>
+
+        <article class="tip" aria-labelledby="maestro-merge-heading">
+          <h2 id="maestro-merge-heading">Meet Maestro Merge Helper</h2>
+          <p class="intro">
+            Maestro Merge Helper is a Chrome extension for NVSL team data coordinators who need to
+            combine compatible B-meet events in SwimTopia Meet Maestro.
+          </p>
+
+          <h3>What it helps with</h3>
+          <p class="intro">
+            Use it when a B-meet has sparse heats that can reasonably be combined across compatible
+            events. The extension helps identify merge opportunities, move swimmers into target
+            events, reduce total heats, and review merged events before finalizing the heat sheet.
+          </p>
+
+          <h3>Install</h3>
+          <ol>
+            <li>Open Google Chrome. The extension is not supported in Safari, Firefox, Edge, or other browsers.</li>
+            <li>
+              Open the unlisted Chrome Web Store page for
+              <a href="https://chromewebstore.google.com/detail/cokbfflndikdnlfbbelamaidlanibfga">Maestro Merge Helper</a>.
+            </li>
+            <li>Click Add to Chrome and confirm the installation if Chrome asks.</li>
+            <li>After installation, open it from Chrome's extensions menu.</li>
+          </ol>
+
+          <h3>Recommended workflow</h3>
+          <ol>
+            <li>Build the meet in SwimTopia with the normal events and entries.</li>
+            <li>Open the meet in Meet Maestro using Google Chrome.</li>
+            <li>Open Maestro Merge Helper from Chrome's extensions menu.</li>
+            <li>
+              Review the <strong>Proposed Merges</strong> tab. These cards identify source events
+              that could save heats if you add a compatible letter-suffixed merge target event.
+            </li>
+            <li>Choose which proposed merges you actually want to use.</li>
+            <li>
+              Return to SwimTopia and edit the meet events to add the merge target events you want.
+              Merge target event numbers must end with a letter, such as <code>6M</code>. Any letter
+              can be used.
+            </li>
+            <li>
+              Make each merge target broad enough for the sources you want to combine. For example,
+              <code>6M</code> could be a mixed-age target for events <code>5</code> and
+              <code>6</code>. Cross-age-group merges are supported when the target age range contains
+              the source age ranges.
+            </li>
+            <li>Ask the opponent to mark their entries as ready again after you change the meet events.</li>
+            <li>Rebuild the meet in SwimTopia.</li>
+            <li>Open the rebuilt meet in Meet Maestro and open Maestro Merge Helper again.</li>
+            <li>
+              Use the <strong>Existing Targets</strong> tab, then click <strong>Merge</strong> on
+              each merge you want to apply. Use <strong>Hide</strong> for options you do not want.
+            </li>
+            <li>
+              Open the <strong>Organize Heats</strong> tab and click <strong>Organize</strong> for
+              any merged event that needs review.
+            </li>
+            <li>
+              In the organizer, use <strong>Sort By Time</strong>,
+              <strong>Group Boys / Girls</strong>, or <strong>Group Age Groups</strong> as needed,
+              then check that swimmers of different ages and genders are arranged the way you want.
+            </li>
+            <li>Review the heat sheet carefully before running the meet.</li>
+          </ol>
+
+          <h3>Review before running</h3>
+          <p class="intro">
+            The helper can speed up meet setup, but the data coordinator still needs to confirm that
+            swimmers ended up in the right places.
+          </p>
+          <ul>
+            <li>Review the heat sheet and event numbers.</li>
+            <li>Check swimmer placement, empty lanes, and unusual merged events.</li>
+            <li>Make sure each merge choice makes sense for both teams.</li>
+          </ul>
+
+          <p class="note">
+            If the merged setup looks wrong, return to SwimTopia and rebuild the meet from the
+            original meet entries.
+          </p>
+
+          <p class="intro">
+            Project source and issue tracking are available on
+            <a href="https://github.com/chayden/maestro-merge">GitHub</a>.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <script>
+      const copyButton = document.querySelector("#copy-code");
+      const snippet = document.querySelector("#snippet");
+
+      copyButton?.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(snippet.textContent);
+        copyButton.textContent = "Copied";
+        window.setTimeout(() => {
+          copyButton.textContent = "Copy";
+        }, 1600);
+      });
+    </script>
+  </body>
+</html>
