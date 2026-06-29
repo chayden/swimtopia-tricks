@@ -194,7 +194,7 @@
       </header>
 
       <section class="tips" aria-label="SwimTopia tips">
-        <article class="tip" aria-labelledby="clear-event-times-heading">
+        <article class="tip" id="clear-event-times" aria-labelledby="clear-event-times-heading">
           <h2 id="clear-event-times-heading">Clear times from Meet Entries By Event</h2>
           <p class="intro">
             Use this console snippet on the SwimTopia Meet Entries By Event report to remove the
@@ -268,7 +268,7 @@
           </p>
         </article>
 
-        <article class="tip" aria-labelledby="clear-athlete-entry-times-heading">
+        <article class="tip" id="clear-athlete-entry-times" aria-labelledby="clear-athlete-entry-times-heading">
           <h2 id="clear-athlete-entry-times-heading">Clear entry times from Meet Entries By Athlete</h2>
           <p class="intro">
             Use this console snippet on the SwimTopia Meet Entries By Athlete report to clear the
@@ -343,8 +343,8 @@
           </ol>
         </article>
 
-        <article class="tip" aria-labelledby="compact-timer-sheets-heading">
-          <h2 id="compact-timer-sheets-heading">Remove empty Meet Maestro Timer Sheet cards</h2>
+        <article class="tip" id="compact-timer-sheets" aria-labelledby="compact-timer-sheets-heading">
+          <h2 id="compact-timer-sheets-heading">Remove Meet Maestro Timer Sheet cards for Events with no Heats</h2>
           <p class="intro">
             Use this console snippet on SwimTopia Meet Maestro's Timer Sheets report to remove timer
             cards that contain only No swimmers, then shift later timer cards forward for printing.
@@ -449,7 +449,7 @@
           </p>
         </article>
 
-        <article class="tip" aria-labelledby="maestro-merge-heading">
+        <article class="tip" id="maestro-merge-helper" aria-labelledby="maestro-merge-heading">
           <h2 id="maestro-merge-heading">Meet Maestro Merge Helper</h2>
           <p class="intro">
             Maestro Merge Helper is a Chrome extension for NVSL team data coordinators who need to
@@ -549,6 +549,17 @@
           window.setTimeout(() => {
             copyButton.textContent = "Copy";
           }, 1600);
+        });
+      });
+
+      // Update URL hash when clicking headings
+      document.querySelectorAll("h2[id$='-heading']").forEach((heading) => {
+        heading.style.cursor = "pointer";
+        heading.addEventListener("click", () => {
+          const article = heading.closest("article[id]");
+          if (article) {
+            history.replaceState(null, null, `#${article.id}`);
+          }
         });
       });
     </script>
