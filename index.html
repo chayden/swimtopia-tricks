@@ -343,6 +343,112 @@
           </ol>
         </article>
 
+        <article class="tip" aria-labelledby="compact-timer-sheets-heading">
+          <h2 id="compact-timer-sheets-heading">Remove empty Meet Maestro Timer Sheet cards</h2>
+          <p class="intro">
+            Use this console snippet on SwimTopia Meet Maestro's Timer Sheets report to remove timer
+            cards that contain only No swimmers, then shift later timer cards forward for printing.
+          </p>
+
+          <p class="note">
+            This is for Timer Sheets printed in Lane then Event order with 2 Events per Page. Each
+            printed page will keep timer cards from only one lane.
+          </p>
+
+          <h3>Steps</h3>
+          <ol>
+            <li>Open the Timer Sheets report in Meet Maestro.</li>
+            <li>Set the report to Lane then Event and 2 Events per Page.</li>
+            <li>Open the Chrome console: Control+Shift+J on Windows, or Cmd+Option+J on Mac.</li>
+            <li>Paste this code after the console prompt, then press Return.</li>
+          </ol>
+
+          <div class="code-block">
+            <div class="code-toolbar">
+              <span>Console snippet</span>
+              <button type="button" data-copy-target="timer-sheets-snippet">Copy</button>
+            </div>
+            <pre><code id="timer-sheets-snippet">(() =&gt; {
+  const cardsPerPage = 2;
+
+  const pageLayouts = [...document.querySelectorAll(".PrintablePages-pageLayout")]
+    .filter(page =&gt; page.querySelector(".TimerSheet-outerWrapper"));
+
+  const sections = pageLayouts.map(page =&gt;
+    page.querySelector(".TimerSheet-outerWrapper")
+  );
+
+  const laneOf = card =&gt; {
+    const match = card.textContent.match(/\bLane\s+\d+\b/i);
+    return match ? match[0].replace(/\s+/g, " ").toLowerCase() : "";
+  };
+
+  const cards = sections
+    .flatMap(section =&gt; [...section.querySelectorAll(":scope &gt; .PrintablePages-sectionItem")])
+    .filter(card =&gt; !/\bNo swimmers\b/i.test(card.textContent));
+
+  const pages = [];
+  let page = [];
+  let pageLane = "";
+
+  cards.forEach(card =&gt; {
+    const cardLane = laneOf(card);
+
+    if (
+      page.length &amp;&amp;
+      (page.length === cardsPerPage || cardLane !== pageLane)
+    ) {
+      pages.push(page);
+      page = [];
+      pageLane = "";
+    }
+
+    page.push(card);
+    pageLane = cardLane;
+
+    if (page.length === cardsPerPage) {
+      pages.push(page);
+      page = [];
+      pageLane = "";
+    }
+  });
+
+  if (page.length) pages.push(page);
+
+  sections.forEach(section =&gt; section.replaceChildren());
+
+  pages.forEach((cardsForPage, index) =&gt; {
+    sections[index].append(...cardsForPage);
+  });
+
+  pageLayouts.forEach((pageLayout, index) =&gt; {
+    const keepPage = index &lt; pages.length;
+    pageLayout.style.display = keepPage ? "" : "none";
+
+    const container = pageLayout.querySelector(".PrintablePages-pageContainer");
+    if (container) container.dataset.testPage = String(index + 1);
+
+    const pageLabel = pageLayout.querySelector("[data-test-page-header] .right-aligned");
+    if (pageLabel &amp;&amp; keepPage) {
+      pageLabel.textContent = `Page ${index + 1} of ${pages.length}`;
+    }
+  });
+
+  console.log(`Packed ${cards.length} timer card(s) onto ${pages.length} page(s).`);
+})();</code></pre>
+          </div>
+
+          <ol start="5">
+            <li>Empty No swimmers timer cards should disappear.</li>
+            <li>Later timer cards should shift forward, with no printed page mixing lanes.</li>
+            <li>Click Print and save the timer sheets as a PDF.</li>
+          </ol>
+
+          <p class="note">
+            If anything looks wrong, reload the report page and it will return to normal.
+          </p>
+        </article>
+
         <article class="tip" aria-labelledby="maestro-merge-heading">
           <h2 id="maestro-merge-heading">Meet Maestro Merge Helper</h2>
           <p class="intro">
